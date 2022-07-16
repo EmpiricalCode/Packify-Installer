@@ -1,13 +1,15 @@
 // Constants
 const path = require("path");
 const url = require("url");
+const https = require("https");
 
 const {app, BrowserWindow, dialog, protocol, ipcMain} = require("electron");
 
-const windowHandler = require(path.join(__dirname, "../util/windowHandler.js"));
+const WindowHandler = require(path.join(__dirname, "../structures/windowHandler.js"));
+const config = require(path.join(__dirname, "../config.js"));
 
 // Class
-class MainWindowHandler extends windowHandler {
+class MainWindowHandler extends WindowHandler {
 
     static spawn() {
 
@@ -48,7 +50,15 @@ class MainWindowHandler extends windowHandler {
     }
     
     static async beginInstallation() {
+
         this.spawnLogEntry("Fetching latest version . . .");
+
+        const request = https.get(config.latestUrl, (response) => {
+
+            response.on("data", (data) => {
+                console.log(data);
+            })
+        })
     }
 }
 
