@@ -9,5 +9,11 @@ contextBridge.exposeInMainWorld("installer", {
         ipcRenderer.on("new-log-entry", (event, args) => {
             callback(event, args);
         })
+    },
+
+    completeLastLogEntry: (callback) => {
+        ipcRenderer.on("complete-last-log-entry", (event, args) => {
+            callback(event, args);
+        })
     }
 })

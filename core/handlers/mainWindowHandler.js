@@ -2,6 +2,7 @@
 const path = require("path");
 const url = require("url");
 const https = require("https");
+const request = require("request");
 
 const {app, BrowserWindow, dialog, protocol, ipcMain} = require("electron");
 
@@ -48,16 +49,22 @@ class MainWindowHandler extends WindowHandler {
     static spawnLogEntry(content) {
         this.window.webContents.send("new-log-entry", content);
     }
+
+    static completeLastLogEntry() {
+        this.window.webContents.send("complete-last-log-entry");
+    }
     
     static async beginInstallation() {
 
         this.spawnLogEntry("Fetching latest version . . .");
 
-        const request = https.get(config.latestUrl, (response) => {
+        request(config.latestUrl, (err, res, body) => {
+            
+            const latestInfo = JSON.parse(body);
 
-            response.on("data", (data) => {
-                console.log(data);
-            })
+            console.log(latestInfo);
+
+            this.completeLastLogEntry();
         })
     }
 }

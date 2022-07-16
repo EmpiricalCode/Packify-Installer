@@ -1,6 +1,7 @@
 // Variables
 var logEntries = [];
 var currId = 0;
+var installing = false;
 
 // Functions
 function spawnLogEntry(id, message) {
@@ -38,15 +39,20 @@ function spawnLogEntry(id, message) {
 
 function install() {
 
-    document.getElementById("subtitle-region").style.opacity = "0";
-    document.getElementById("subtitle-region").style.zindex = "0";
+    if (!installing) {
 
-    setTimeout(() => {
-        document.getElementById("app-title").style.marginTop = "50px";
-        document.getElementById("current-process-display").style.opacity = "1";
+        installing = true;
 
-        window.installer.beginInstallation("args");
-    }, 200);  
+        document.getElementById("subtitle-region").style.opacity = "0";
+        document.getElementById("subtitle-region").style.zindex = "0";
+
+        setTimeout(() => {
+            document.getElementById("app-title").style.marginTop = "50px";
+            document.getElementById("current-process-display").style.opacity = "1";
+
+            window.installer.beginInstallation("args");
+        }, 200);  
+    }
 }
 
 // Main
@@ -59,4 +65,11 @@ window.installer.newLogEntry((event, args) => {
     spawnLogEntry(currId, args);
 
     currId ++;
+})
+
+window.installer.completeLastLogEntry((event, args) => {
+
+    if (logEntries.length > 0) {
+        document.getElementById(logEntries[logEntries.length - 1]).innerHTML += " Done✔️"
+    }
 })
