@@ -5,7 +5,7 @@ const path = require("path");
 const {app, BrowserWindow, dialog, protocol, ipcMain} = require("electron");
 
 // Class
-class windowHandler {
+class WindowHandler {
 
     static window;
 
@@ -30,4 +30,4 @@ class windowHandler {
         return window;
     }
 }
-module.exports = windowHandler;
+module.exports = WindowHandler;
