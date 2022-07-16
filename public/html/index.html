@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" href="../css/index.css">
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <div id="title-bar">
+
+            <div id="title-bar-button-container">
+                <button id="minimize" class="title-bar-button">
+                    _
+                </button>
+                <button id="close" class="title-bar-button">
+                    x
+                </button>
+            </div>
+        </div>
+        <div id="body">
+            <div id="current-process-display">
+                <div class="process">
+                    <p class="process-title">Fetch Latest Version</p>
+                </div>
+
+                <p class="process-divider">></p>
+
+                <div class="process">
+                    <p class="process-title">Download Resources</p>
+                </div>
+
+                <p class="process-divider">></p>
+
+                <div class="process">
+                    <p class="process-title">Install Resources</p>
+                </div>
+            </div>
+            <img src="../assets/test.png">
+            <p id="app-title">
+                Packify
+            </p>
+            <div id="subtitle-region">
+                <p id="app-subtitle">
+                    Files made easy.
+                </p>
+                <button id="install-button", onclick="install()">
+                    Install
+                </button>
+            </div> 
+            <div id="logs">
+            </div>
+            
+        </div>
+        <script src="../js/index.js"></script>
+    </body>
+</html>

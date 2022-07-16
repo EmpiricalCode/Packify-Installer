@@ -1,0 +1,27 @@
+{
+  "name": "packify-installer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start" : "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^19.0.8"
+  },
+  "build": {
+    "appId": "com.installer.packify",
+    "protocols": {
+      "name": "packify",
+      "schemes": [
+        "packify"
+      ]
+    },
+
+    "win" : {
+      "target" : ["portable"]
+    }
+  }
+}
