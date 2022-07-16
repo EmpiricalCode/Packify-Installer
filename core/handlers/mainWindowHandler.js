@@ -6,51 +6,50 @@ const {app, BrowserWindow, dialog, protocol, ipcMain} = require("electron");
 
 const windowHandler = require(path.join(__dirname, "../util/windowHandler.js"));
 
-// Let statments
-let window;
+// Class
+class MainWindowHandler extends windowHandler {
 
-// Functions
-function spawnLogEntry(content) {
-    window.webContents.send("new-log-entry", content);
-}
+    static spawn() {
 
-function spawn() {
+        if (!this.window) {
 
-    if (!window) {
+            this.window = this.spawnWindow(path.join(__dirname, "../../public/html/index.html"), {
+                width: 600, 
+                height: 400,
+                webPreferences: {
+                    nodeIntegration: true,
+                    preload: path.join(__dirname, "../preload.js")
+                },
+                titleBarStyle: 'hidden',
+                resizable: false
+            });
 
-        window = windowHandler.spawnWindow(path.join(__dirname, "../../public/html/index.html"), {
-            width: 600, 
-            height: 400,
-            webPreferences: {
-                nodeIntegration: true,
-                preload: path.join(__dirname, "../preload.js")
-            },
-            titleBarStyle: 'hidden',
-            resizable: false
-        });
+            // Initialization
+            this.window.once("ready-to-show", () => {
+                this.window.webContents.toggleDevTools();
+            });
 
-        // Initialization
-        window.once("ready-to-show", () => {
-            window.webContents.toggleDevTools();
-        });
+            this.window.on("closed", () => {
+                this.window = undefined;
+            })
 
-        window.on("closed", () => {
-            window = undefined;
-        })
+            // Main Window communication
+            ipcMain.handle("begin-installation", (event, args) => {
+                this.beginInstallation();
+            })
 
-        // Main Window communication
-        ipcMain.handle("begin-installation", (event, args) => {
-            spawnLogEntry("Fetching latest version . . .");
-        })
+        } else {
+            this.window.focus();
+        }
+    }
 
-    } else {
-        window.focus();
+    static spawnLogEntry(content) {
+        this.window.webContents.send("new-log-entry", content);
+    }
+    
+    static async beginInstallation() {
+        this.spawnLogEntry("Fetching latest version . . .");
     }
 }
 
-function getWindow() {
-    return window;
-}
-
-module.exports.getWindow = getWindow;
-module.exports.spawn = spawn;
+module.exports = MainWindowHandler;
