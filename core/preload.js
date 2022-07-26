@@ -15,5 +15,17 @@ contextBridge.exposeInMainWorld("installer", {
         ipcRenderer.on("complete-last-log-entry", (event, args) => {
             callback(event, args);
         })
+    },
+
+    downloadProgress: (callback) => {
+        ipcRenderer.on("download-progress", (event, args) => {
+            callback(event, args);
+        })
+    },
+
+    downloadComplete: (callback) => {
+        ipcRenderer.on("download-complete", (event, args) => {
+            callback(event, args);
+        })
     }
 })

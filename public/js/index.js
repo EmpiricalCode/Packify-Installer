@@ -59,10 +59,6 @@ function install() {
 // Main
 window.installer.newLogEntry((event, args) => {
 
-    if (logEntries.length > 0) {
-        document.getElementById(logEntries[logEntries.length - 1]).innerHTML += " Done ✔️";
-    }
-
     spawnLogEntry(currId, args);
 
     currId ++;
@@ -73,4 +69,15 @@ window.installer.completeLastLogEntry((event, args) => {
     if (logEntries.length > 0) {
         document.getElementById(logEntries[logEntries.length - 1]).innerHTML += " Done ✔️";
     }
+})
+
+window.installer.downloadProgress((event, args) => {
+    
+    document.getElementById("download-progress-background").style.opacity = "1";
+    document.getElementById("download-progress-bar").style.width = `${parseInt(args.current) / parseInt(args.total) * 100}%`;
+})
+
+window.installer.downloadComplete((event, args) => {
+
+    document.getElementById("download-progress-background").style.opacity = "0";
 })
