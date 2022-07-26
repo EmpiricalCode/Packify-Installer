@@ -45,6 +45,7 @@ function install() {
 
         document.getElementById("subtitle-region").style.opacity = "0";
         document.getElementById("subtitle-region").style.zindex = "0";
+        document.getElementById("install-button").style.cursor = "default";
 
         setTimeout(() => {
             document.getElementById("app-title").style.marginTop = "50px";
