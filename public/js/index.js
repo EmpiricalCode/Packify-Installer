@@ -59,7 +59,7 @@ function install() {
 window.installer.newLogEntry((event, args) => {
 
     if (logEntries.length > 0) {
-        document.getElementById(logEntries[logEntries.length - 1]).innerHTML += " Done ✔️"
+        document.getElementById(logEntries[logEntries.length - 1]).innerHTML += " Done ✔️";
     }
 
     spawnLogEntry(currId, args);
@@ -70,6 +70,6 @@ window.installer.newLogEntry((event, args) => {
 window.installer.completeLastLogEntry((event, args) => {
 
     if (logEntries.length > 0) {
-        document.getElementById(logEntries[logEntries.length - 1]).innerHTML += " Done ✔️"
+        document.getElementById(logEntries[logEntries.length - 1]).innerHTML += " Done ✔️";
     }
 })
