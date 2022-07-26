@@ -30,7 +30,7 @@ class MainWindowHandler extends WindowHandler {
 
             // Initialization
             this.window.once("ready-to-show", () => {
-                 this.window.webContents.toggleDevTools();
+                // this.window.webContents.toggleDevTools();
             });
 
             this.window.on("close", (event) => {
