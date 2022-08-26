@@ -4,6 +4,7 @@ const https = require("https");
 const fs = require("fs");
 const request = require("request");
 const path = require("path");
+const unzipper = require("unzipper");
 
 const {app, BrowserWindow, dialog, protocol, ipcMain} = require("electron");
 
@@ -69,77 +70,134 @@ class MainWindowHandler extends WindowHandler {
         });
     }
 
-    static async downloadUrl(url, callback) {
-        return new Promise (resolve => {
+    // Deprecated
+    // static async downloadUrl(url, callback) {
+    //     return new Promise (resolve => {
 
-            req = https.get(url, (res) => {
+    //         this.currentDownloadResolve = resolve;
+    //         resolve();
 
-                callback(res, resolve);
-            })
-        })
-    }
+    //         req = https.get(url, (res) => {
+
+    //             callback(res, resolve);
+    //         })
+    //     })
+    // }
 
     static async beginInstallation() {
 
-        try {
+        var latestInfoHeader = undefined;
+        var latestInfo = undefined;
 
-            var latestInfoHeader = undefined;
-            var latestInfo = undefined;
+        // Fetching latest version
+        this.spawnLogEntry("Fetching latest version . . .");
 
-            // Fetching latest version
-            this.spawnLogEntry("Fetching latest version . . .");
+        await this.fetchUrl(config.latestUrl, (err, res, body, resolve) => {
 
-            await this.fetchUrl(config.latestUrl, (err, res, body, resolve) => {
-
+            try {
                 latestInfoHeader = JSON.parse(body);
 
                 this.completeLastLogEntry();
                 
                 resolve();
-            });
 
-            // Checking if latest version exists
-            this.spawnLogEntry("Checking latest version info . . .");
+            } catch {
+                console.log("Failed to requestion latest version");
+            }
+        });
 
-            if (latestInfoHeader && latestInfoHeader.versionName) {
+        // Checking if latest version exists
+        this.spawnLogEntry("Checking latest version info . . .");
 
-                await this.fetchUrl(`https://raw.githubusercontent.com/primalc0de/Packify-Releases/${latestInfoHeader.versionName}/info.json`, (err, res, body, resolve) => {
+        if (latestInfoHeader && latestInfoHeader.versionName) {
 
+            await this.fetchUrl(`https://raw.githubusercontent.com/primalc0de/Packify-Releases/${latestInfoHeader.versionName}/info.json`, (err, res, body, resolve) => {
+
+                try {
                     latestInfo = JSON.parse(body);
 
                     this.completeLastLogEntry();
                     
                     resolve();
-                });
+                    
+                } catch {
+                    console.log("Failed to get latest version info");
+                }
+            });
 
-                this.spawnLogEntry("Downloading latest version . . .");
-                
-                await this.downloadUrl(`https://raw.githubusercontent.com/primalc0de/Packify-Releases/${latestInfoHeader.versionName}/packed.zip`, (res, resolve) => {
+            this.spawnLogEntry("Downloading latest version . . .");
+            
+            await new Promise (resolve => {
 
-                    const file = fs.createWriteStream(path.join(__dirname, "../../packed.zip"));
-                    var recievedBytes = 0;
+                try {
+                    
+                    https.get(`https://raw.githubusercontent.com/primalc0de/Packify-Releases/${latestInfoHeader.versionName}/packed.zip`, (res) => {
 
-                    res.pipe(file);
+                        const file = fs.createWriteStream(path.join(__dirname, "../../../packed.zip"));
+                        var recievedBytes = 0;
 
-                    res.on("data", (chunk) => {
-                        recievedBytes += chunk.length;
- 
-                        this.window.webContents.send("download-progress", {current : recievedBytes, total : latestInfo.size});
-                    })
+                        res.pipe(file);
 
-                    res.on("end", () => {
+                        res.on("data", (chunk) => {
+
+                            try {
+                                recievedBytes += chunk.length;
+                                this.window.webContents.send("download-progress", {current : recievedBytes, total : latestInfo.size});
+
+                            } catch {
+                                console.log("Failed to download latest version");
+                            }
+                        })
+
+                        res.on("end", () => {
+
+                            try {
+                                this.completeLastLogEntry();
+                                this.downloadComplete();
+
+                                resolve();
+
+                            } catch {
+                                console.log("Failed to download latest version");
+                            }
+
+                        })
+
+                    });
+
+                } catch {
+                    console.log("Failed to download latest version");
+                }
+            });
+
+            this.spawnLogEntry("Unzipping . . .");
+
+            // This is to prevent a weird Invalid Package error
+            process.noAsar = true;
+
+            await new Promise (resolve => {
+
+                try {
+
+                    const username = require("os").userInfo().username;
+
+                    fs.createReadStream(path.join(__dirname, "../../../packed.zip")).pipe(unzipper.Extract({ path: `C:/users/${username}/Desktop/Projects` })).on("close", () => {
 
                         this.completeLastLogEntry();
-                        this.downloadComplete();
+
+                        // Re-enable Asar
+                        process.noAsar = false;
 
                         resolve();
-                    })
-                });
-            }   
+                    });
 
-        } catch {
-            // TODO: Handle installation errors
-        }
+                } catch {
+
+                    console.log("Failed to unzip installation");
+                    process.noAsar = true;
+                }
+            });
+        }   
     }
 }
 
