@@ -111,7 +111,7 @@ class MainWindowHandler extends WindowHandler {
 
         if (latestInfoHeader && latestInfoHeader.versionName) {
 
-            await this.fetchUrl(`https://raw.githubusercontent.com/primalc0de/Packify-Releases/${latestInfoHeader.versionName}/info.json`, (err, res, body, resolve) => {
+            await this.fetchUrl(`https://raw.githubusercontent.com/EmpiricalCode/Packify-Releases/${latestInfoHeader.versionName}/info.json`, (err, res, body, resolve) => {
 
                 try {
                     latestInfo = JSON.parse(body);
@@ -131,7 +131,7 @@ class MainWindowHandler extends WindowHandler {
 
                 try {
                     
-                    https.get(`https://raw.githubusercontent.com/primalc0de/Packify-Releases/${latestInfoHeader.versionName}/packed.zip`, (res) => {
+                    https.get(`https://raw.githubusercontent.com/EmpiricalCode/Packify-Releases/${latestInfoHeader.versionName}/packed.zip`, (res) => {
 
                         const file = fs.createWriteStream(path.join(__dirname, "../../../packed.zip"));
                         var recievedBytes = 0;
