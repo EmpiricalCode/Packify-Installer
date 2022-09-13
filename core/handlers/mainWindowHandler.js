@@ -70,20 +70,6 @@ class MainWindowHandler extends WindowHandler {
         });
     }
 
-    // Deprecated
-    // static async downloadUrl(url, callback) {
-    //     return new Promise (resolve => {
-
-    //         this.currentDownloadResolve = resolve;
-    //         resolve();
-
-    //         req = https.get(url, (res) => {
-
-    //             callback(res, resolve);
-    //         })
-    //     })
-    // }
-
     static async beginInstallation() {
 
         var latestInfoHeader = undefined;
