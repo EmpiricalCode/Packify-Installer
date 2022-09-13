@@ -102,7 +102,7 @@ class MainWindowHandler extends WindowHandler {
                 resolve();
 
             } catch {
-                console.log("Failed to requestion latest version");
+                console.log("Failed to request latest version");
             }
         });
 
