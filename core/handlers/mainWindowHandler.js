@@ -91,13 +91,14 @@ class MainWindowHandler extends WindowHandler {
 
                     this.completeLastLogEntry();
                     
-                    setTimeout(() => {
+                    // setTimeout(() => {
                         resolve();
-                    }, 100);
+                    // }, 100);
                 }
 
             } catch {
-                console.log("Failed to check installation directory");
+                dialog.showErrorBox("Error", "Failed to check installation directory");
+                app.quit();
             }
         });
 
@@ -111,12 +112,13 @@ class MainWindowHandler extends WindowHandler {
 
                 this.completeLastLogEntry();
                 
-                setTimeout(() => {
+                // setTimeout(() => {
                     resolve();
-                }, 100);
+                // }, 100);
 
             } catch {
-                console.log("Failed to request latest version");
+                dialog.showErrorBox("Error", "Failed to request latest version");
+                app.quit();
             }
         });
 
@@ -137,7 +139,8 @@ class MainWindowHandler extends WindowHandler {
                     }, 500); // Timeout of 500ms as a style choice for the installation
                     
                 } catch {
-                    console.log("Failed to get latest version info");
+                    dialog.showErrorBox("Error", "Failed to get latest version info");
+                    app.quit();
                 }
             });
 
@@ -161,7 +164,8 @@ class MainWindowHandler extends WindowHandler {
                                 this.window.webContents.send("download-progress", {current : recievedBytes, total : latestInfo.size});
 
                             } catch {
-                                console.log("Failed to download latest version");
+                                dialog.showErrorBox("Error", "Failed to download latest version");
+                                app.quit();
                             }
                         })
 
@@ -173,10 +177,11 @@ class MainWindowHandler extends WindowHandler {
 
                                 setTimeout(() => {
                                     resolve();
-                                }, 200);
+                                }, 100);
 
                             } catch {
-                                console.log("Failed to download latest version");
+                                dialog.showErrorBox("Error", "Failed to download latest version");
+                                app.quit();
                             }
 
                         })
@@ -184,7 +189,7 @@ class MainWindowHandler extends WindowHandler {
                     });
 
                 } catch {
-                    console.log("Failed to download latest version");
+                    dialog.showErrorBox("Error", "Failed to download latest version");
                 }
             });
 
@@ -206,14 +211,13 @@ class MainWindowHandler extends WindowHandler {
 
                         setTimeout(() => {
                             resolve();
-                        }, 200);
+                        }, 100);
                     });
 
                 } catch {
 
-                    console.log("Failed to unzip installation");
-                    this.completeLastLogEntry();
-                    process.noAsar = true;
+                    dialog.showErrorBox("Error", "Failed to unzip installation");
+                    app.quit();
                 }
             });
         }   
