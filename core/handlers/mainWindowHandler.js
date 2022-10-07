@@ -93,7 +93,7 @@ class MainWindowHandler extends WindowHandler {
                     
                     setTimeout(() => {
                         resolve();
-                    }, 200);
+                    }, 100);
                 }
 
             } catch {
@@ -113,7 +113,7 @@ class MainWindowHandler extends WindowHandler {
                 
                 setTimeout(() => {
                     resolve();
-                }, 200);
+                }, 100);
 
             } catch {
                 console.log("Failed to request latest version");
