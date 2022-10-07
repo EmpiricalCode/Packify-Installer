@@ -70,24 +70,36 @@ class MainWindowHandler extends WindowHandler {
         });
     }
 
-    // Deprecated
-    // static async downloadUrl(url, callback) {
-    //     return new Promise (resolve => {
-
-    //         this.currentDownloadResolve = resolve;
-    //         resolve();
-
-    //         req = https.get(url, (res) => {
-
-    //             callback(res, resolve);
-    //         })
-    //     })
-    // }
-
     static async beginInstallation() {
+
+        const username = require("os").userInfo().username;
 
         var latestInfoHeader = undefined;
         var latestInfo = undefined;
+
+        // Checking for an installed version
+        this.spawnLogEntry("Checking installation directory . . .");
+
+        await new Promise(resolve => {
+
+            try {
+                if (fs.existsSync(`C:/Users/${username}/Packify`)) {
+
+                    dialog.showErrorBox("Error", "The installation directory is occupied.");
+                    app.quit();
+                } else {
+
+                    this.completeLastLogEntry();
+                    
+                    setTimeout(() => {
+                        resolve();
+                    }, 200);
+                }
+
+            } catch {
+                console.log("Failed to check installation directory");
+            }
+        });
 
         // Fetching latest version
         this.spawnLogEntry("Fetching latest version . . .");
@@ -99,7 +111,9 @@ class MainWindowHandler extends WindowHandler {
 
                 this.completeLastLogEntry();
                 
-                resolve();
+                setTimeout(() => {
+                    resolve();
+                }, 200);
 
             } catch {
                 console.log("Failed to requestion latest version");
@@ -118,7 +132,9 @@ class MainWindowHandler extends WindowHandler {
 
                     this.completeLastLogEntry();
                     
-                    resolve();
+                    setTimeout(() => {
+                        resolve();
+                    }, 500); // Timeout of 500ms as a style choice for the installation
                     
                 } catch {
                     console.log("Failed to get latest version info");
@@ -155,7 +171,9 @@ class MainWindowHandler extends WindowHandler {
                                 this.completeLastLogEntry();
                                 this.downloadComplete();
 
-                                resolve();
+                                setTimeout(() => {
+                                    resolve();
+                                }, 200);
 
                             } catch {
                                 console.log("Failed to download latest version");
@@ -179,21 +197,22 @@ class MainWindowHandler extends WindowHandler {
 
                 try {
 
-                    const username = require("os").userInfo().username;
-
-                    fs.createReadStream(path.join(__dirname, "../../../packed.zip")).pipe(unzipper.Extract({ path: `C:/users/${username}/Desktop/Projects` })).on("close", () => {
+                    fs.createReadStream(path.join(__dirname, "../../../packed.zip")).pipe(unzipper.Extract({ path: `C:/Users/${username}/Packify` })).on("close", () => {
 
                         this.completeLastLogEntry();
 
                         // Re-enable Asar
                         process.noAsar = false;
 
-                        resolve();
+                        setTimeout(() => {
+                            resolve();
+                        }, 200);
                     });
 
                 } catch {
 
                     console.log("Failed to unzip installation");
+                    this.completeLastLogEntry();
                     process.noAsar = true;
                 }
             });
