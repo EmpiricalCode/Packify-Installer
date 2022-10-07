@@ -31,7 +31,7 @@ class MainWindowHandler extends WindowHandler {
 
             // Initialization
             this.window.once("ready-to-show", () => {
-                // this.window.webContents.toggleDevTools();
+                // this.window.webContents.toggleDevTools(); 
             });
 
             this.window.on("close", (event) => {
@@ -116,7 +116,7 @@ class MainWindowHandler extends WindowHandler {
                 }, 200);
 
             } catch {
-                console.log("Failed to requestion latest version");
+                console.log("Failed to request latest version");
             }
         });
 
