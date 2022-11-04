@@ -5,6 +5,7 @@ const fs = require("fs");
 const request = require("request");
 const path = require("path");
 const unzipper = require("unzipper");
+const exec = require('child_process').execFile;
 
 const {app, BrowserWindow, dialog, protocol, ipcMain} = require("electron");
 
@@ -194,6 +195,7 @@ class MainWindowHandler extends WindowHandler {
 
                 } catch {
                     dialog.showErrorBox("Error", "Failed to download latest version");
+                    app.quit();
                 }
             });
 
@@ -224,6 +226,29 @@ class MainWindowHandler extends WindowHandler {
                     app.quit();
                 }
             });
+
+            // Launching installed application
+            this.window.hide();
+
+            await new Promise (resolve => {
+
+                try {
+                    exec(`C:/Users/${username}/Packify/win-unpacked/packify.exe`, function(err, data) {
+                        if (err) {
+                            dialog.showErrorBox("Error", "Failed to launch application");
+                            app.quit();
+                        } else {
+                            resolve();
+                        }
+                    });
+
+                } catch {
+                    dialog.showErrorBox("Error", "Failed to launch application");
+                    app.quit();
+                }
+            })
+
+            app.quit();
         }   
     }
 }
