@@ -148,54 +148,53 @@ class MainWindowHandler extends WindowHandler {
             
             await new Promise (resolve => {
 
-                try {
-                    
-                    https.get(`https://raw.githubusercontent.com/EmpiricalCode/Packify-Releases/${latestInfoHeader.versionName}/packed.zip`, (res) => {
+                var request = https.get(`https://raw.githubusercontent.com/EmpiricalCode/Packify-Releases/${latestInfoHeader.versionName}/packed.zip`, (res) => {
 
-                        const file = fs.createWriteStream(path.join(__dirname, "../../../packed.zip"));
-                        var recievedBytes = 0;
-                        var lastPacketRecieved = true;
+                    const file = fs.createWriteStream(path.join(__dirname, "../../../packed.zip"));
+                    var recievedBytes = 0;
+                    var lastPacketRecieved = true;
 
-                        res.pipe(file);
+                    res.pipe(file);
 
-                        res.on("data", (chunk) => {
+                    res.on("data", (chunk) => {
 
-                            if (lastPacketRecieved) {
-                                try {
-                                    recievedBytes += chunk.length;
-                                    this.window.webContents.send("download-progress", {current : recievedBytes, total : latestInfo.size});
-
-                                } catch {
-                                    dialog.showErrorBox("Error", "Failed to download latest version");
-                                    lastPacketRecieved = false;
-                                    app.quit();
-                                }
-                            } 
-                        })
-
-                        res.on("end", () => {
-
+                        if (lastPacketRecieved) {
                             try {
-                                this.completeLastLogEntry();
-                                this.downloadComplete();
-
-                                setTimeout(() => {
-                                    resolve();
-                                }, 200);
+                                recievedBytes += chunk.length;
+                                this.window.webContents.send("download-progress", {current : recievedBytes, total : latestInfo.size});
 
                             } catch {
-                                dialog.showErrorBox("Error", "Failed to download latest version");
+                                dialog.showErrorBox("Error", "An error occured while downloading the latest version");
+                                lastPacketRecieved = false;
                                 app.quit();
                             }
+                        } 
+                    })
 
-                        })
+                    res.on("end", () => {
 
-                    });
+                        try {
+                            this.completeLastLogEntry();
+                            this.downloadComplete();
 
-                } catch {
-                    dialog.showErrorBox("Error", "Failed to download latest version");
+                            setTimeout(() => {
+                                resolve();
+                            }, 200);
+
+                        } catch {
+                            dialog.showErrorBox("Error", "An error occured while downloading the latest version");
+                            app.quit();
+                        }
+
+                    })
+
+                });
+
+                // Handling download error
+                request.on("error", (err) => {
+                    dialog.showErrorBox("Error", `An error occured while downloading the latest version:\n\n${err.message}`);
                     app.quit();
-                }
+                })
             });
 
             this.spawnLogEntry("Unzipping . . .");
