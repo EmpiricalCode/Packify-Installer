@@ -90,11 +90,10 @@ class MainWindowHandler extends WindowHandler {
                     app.quit();
                 } else {
 
-                    this.completeLastLogEntry();
-                    
-                    // setTimeout(() => {
+                    setTimeout(() => {
+                        this.completeLastLogEntry();
                         resolve();
-                    // }, 100);
+                    }, 200);
                 }
 
             } catch {
@@ -113,9 +112,9 @@ class MainWindowHandler extends WindowHandler {
 
                 this.completeLastLogEntry();
                 
-                // setTimeout(() => {
+                setTimeout(() => {
                     resolve();
-                // }, 100);
+                }, 200);
 
             } catch {
                 dialog.showErrorBox("Error", "Failed to request latest version");
@@ -182,7 +181,7 @@ class MainWindowHandler extends WindowHandler {
 
                                 setTimeout(() => {
                                     resolve();
-                                }, 100);
+                                }, 200);
 
                             } catch {
                                 dialog.showErrorBox("Error", "Failed to download latest version");
@@ -217,7 +216,7 @@ class MainWindowHandler extends WindowHandler {
 
                         setTimeout(() => {
                             resolve();
-                        }, 100);
+                        }, 1000);
                     });
 
                 } catch {

@@ -67,7 +67,7 @@ img {
     outline: none;
 }
 
-.log-entry {
+.log-entry-container {
     position: relative;
     
     margin-top: 15px;
@@ -80,6 +80,11 @@ img {
 
 .log-entry-show {
     opacity: 0;
+}
+
+.log-entry {
+    display: inline;
+    margin-right: 20px;
 }
 
 .process-divider {
@@ -96,6 +101,12 @@ img {
     font-size: 15px;
 
     color: rgb(102, 102, 102);
+}
+
+.log-entry-complete-indicator {
+    display: inline;
+    color: rgb(88, 143, 88);
+    font-weight: 500;
 }
 
 #download-progress-background {

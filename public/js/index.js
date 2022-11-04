@@ -26,9 +26,14 @@ function spawnLogEntry(id, message) {
 
     newLogElement.classList.add("log-entry");
     newLogElement.innerHTML = message;
-    newLogElement.id = id;
 
-    document.getElementById("logs").appendChild(newLogElement);
+    const logElementContainer = document.createElement("div");
+
+    logElementContainer.id = id;
+    logElementContainer.classList.add("log-entry-container");
+
+    document.getElementById("logs").appendChild(logElementContainer);
+    document.getElementById(id).appendChild(newLogElement);
     
     logEntries.push(id);
 
@@ -56,6 +61,15 @@ function install() {
     }
 }
 
+function flicker(element, num) {
+    if (num > 0) {
+        setTimeout(() => {
+            element.style.opacity = num % 2;
+            flicker(element, num - 1);
+        }, 50);
+    }
+}
+
 // Main
 window.installer.newLogEntry((event, args) => {
 
@@ -67,7 +81,15 @@ window.installer.newLogEntry((event, args) => {
 window.installer.completeLastLogEntry((event, args) => {
 
     if (logEntries.length > 0) {
-        document.getElementById(logEntries[logEntries.length - 1]).innerHTML += " Done ✔️";
+
+        var lastIndicator = document.getElementById("latest-indicator");
+        
+        if (lastIndicator) {
+            lastIndicator.id = undefined;
+        }
+
+        document.getElementById(logEntries[logEntries.length - 1]).innerHTML += `<p id="latest-indicator" class="log-entry-complete-indicator">COMPLETE</p>`;
+        flicker(document.getElementById("latest-indicator"), 4);
     }
 })
 
