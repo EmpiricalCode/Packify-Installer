@@ -154,19 +154,23 @@ class MainWindowHandler extends WindowHandler {
 
                         const file = fs.createWriteStream(path.join(__dirname, "../../../packed.zip"));
                         var recievedBytes = 0;
+                        var lastPacketRecieved = true;
 
                         res.pipe(file);
 
                         res.on("data", (chunk) => {
 
-                            try {
-                                recievedBytes += chunk.length;
-                                this.window.webContents.send("download-progress", {current : recievedBytes, total : latestInfo.size});
+                            if (lastPacketRecieved) {
+                                try {
+                                    recievedBytes += chunk.length;
+                                    this.window.webContents.send("download-progress", {current : recievedBytes, total : latestInfo.size});
 
-                            } catch {
-                                dialog.showErrorBox("Error", "Failed to download latest version");
-                                app.quit();
-                            }
+                                } catch {
+                                    dialog.showErrorBox("Error", "Failed to download latest version");
+                                    lastPacketRecieved = false;
+                                    app.quit();
+                                }
+                            } 
                         })
 
                         res.on("end", () => {
