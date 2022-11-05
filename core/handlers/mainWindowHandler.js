@@ -109,10 +109,9 @@ class MainWindowHandler extends WindowHandler {
 
             try {
                 latestInfoHeader = JSON.parse(body);
-
-                this.completeLastLogEntry();
                 
                 setTimeout(() => {
+                    this.completeLastLogEntry();
                     resolve();
                 }, 200);
 
@@ -132,8 +131,10 @@ class MainWindowHandler extends WindowHandler {
                 try {
                     latestInfo = JSON.parse(body);
 
-                    this.completeLastLogEntry();
-                    
+                    setTimeout(() => {
+                        this.completeLastLogEntry();
+                    }, 200);
+                        
                     setTimeout(() => {
                         resolve();
                     }, 500); // Timeout of 500ms as a style choice for the installation

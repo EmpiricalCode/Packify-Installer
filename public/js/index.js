@@ -66,7 +66,7 @@ function flicker(element, num) {
         setTimeout(() => {
             element.style.opacity = num % 2;
             flicker(element, num - 1);
-        }, 50);
+        }, 40);
     }
 }
 
