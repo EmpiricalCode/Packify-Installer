@@ -27,12 +27,13 @@ class MainWindowHandler extends WindowHandler {
                     preload: path.join(__dirname, "../preload.js")
                 },
                 titleBarStyle: 'hidden',
-                resizable: false
+                resizable: false,
+                show: false,
             });
 
             // Initialization
             this.window.once("ready-to-show", () => {
-                // this.window.webContents.toggleDevTools(); 
+                this.window.show();
             });
 
             this.window.on("close", (event) => {
