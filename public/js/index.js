@@ -3,10 +3,17 @@ var logEntries = [];
 var currId = 0;
 var installing = false;
 
+var logEntryElements = document.getElementsByClassName("log-entry");
+var subtitleRegion = document.getElementById("subtitle-region");
+var installButton = document.getElementById("install-button");
+var appTitle = document.getElementById("app-title");
+var currentProcessDisplay = document.getElementById("current-process-display");
+var downloadProgressBackground = document.getElementById("download-progress-background");
+var downloadProgressBar = document.getElementById("download-progress-bar");
+
+
 // Functions
 function spawnLogEntry(id, message) {
-
-    const logEntryElements = document.getElementsByClassName("log-entry");
 
     if (logEntries.length == 3) {
         
@@ -48,13 +55,13 @@ function install() {
 
         installing = true;
 
-        document.getElementById("subtitle-region").style.opacity = "0";
-        document.getElementById("subtitle-region").style.zindex = "0";
-        document.getElementById("install-button").style.cursor = "default";
+        subtitleRegion.style.opacity = "0";
+        subtitleRegion.style.zindex = "0";
+        installButton.style.cursor = "default";
 
         setTimeout(() => {
-            document.getElementById("app-title").style.marginTop = "50px";
-            document.getElementById("current-process-display").style.opacity = "1";
+            appTitle.style.marginTop = "50px";
+            currentProcessDisplay.style.opacity = "1";
 
             window.installer.beginInstallation("args");
         }, 200);  
@@ -95,11 +102,11 @@ window.installer.completeLastLogEntry((event, args) => {
 
 window.installer.downloadProgress((event, args) => {
     
-    document.getElementById("download-progress-background").style.opacity = "1";
-    document.getElementById("download-progress-bar").style.width = `${parseInt(args.current) / parseInt(args.total) * 100}%`;
+    downloadProgressBackground.style.opacity = "1";
+    downloadProgressBar.style.width = `${parseInt(args.current) / parseInt(args.total) * 100}%`;
 })
 
 window.installer.downloadComplete((event, args) => {
 
-    document.getElementById("download-progress-background").style.opacity = "0";
+    downloadProgressBackground.style.opacity = "0";
 })
