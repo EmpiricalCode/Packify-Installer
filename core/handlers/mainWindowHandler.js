@@ -85,7 +85,7 @@ class MainWindowHandler extends WindowHandler {
         await new Promise(resolve => {
 
             try {
-                if (fs.existsSync(`C:/Users/${username}/Packify`)) {
+                if (fs.existsSync(`/Users/${username}/Packify`)) {
 
                     dialog.showErrorBox("Error", "The installation directory is occupied.");
                     app.quit();
@@ -208,7 +208,7 @@ class MainWindowHandler extends WindowHandler {
 
                 try {
 
-                    fs.createReadStream(path.join(__dirname, "../../../packed.zip")).pipe(unzipper.Extract({ path: `C:/Users/${username}/Packify` })).on("close", () => {
+                    fs.createReadStream(path.join(__dirname, "../../../packed.zip")).pipe(unzipper.Extract({ path: `/Users/${username}/Packify` })).on("close", () => {
 
                         this.completeLastLogEntry();
 
@@ -233,7 +233,7 @@ class MainWindowHandler extends WindowHandler {
             await new Promise (resolve => {
 
                 try {
-                    exec(`C:/Users/${username}/Packify/win-unpacked/packify.exe`, function(err, data) {
+                    exec(`/Users/${username}/Packify/win-unpacked/packify.exe`, function(err, data) {
                         if (err) {
                             dialog.showErrorBox("Error", "Failed to launch application");
                             app.quit();
